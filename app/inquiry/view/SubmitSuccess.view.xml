@@ -1,0 +1,32 @@
+<mvc:View
+  controllerName="inquiry.controller.SubmitSuccess"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  displayBlock="true">
+
+  <Page title="送信完了" showNavButton="false">
+    <content>
+      <VBox alignItems="Center" justifyContent="Center" height="100%"
+        class="sapUiLargeMarginTop">
+        <items>
+          <ObjectStatus
+            icon="sap-icon://accept"
+            text="問い合わせを受け付けました"
+            state="Success"
+            inverted="true"
+            class="sapUiLargeMarginBottom" />
+          <Title id="inquiryNoTitle" level="H2" class="sapUiMediumMarginBottom" />
+          <Text text="担当者より順次ご回答いたします。" class="sapUiSmallMarginBottom"
+            style="font-size: 1.1rem;" />
+          <Text text="しばらくお待ちください。"
+            style="font-size: 1.1rem;" />
+          <Button
+            text="新しい問い合わせを入力する"
+            type="Emphasized"
+            press=".onNewInquiry"
+            class="sapUiLargeMarginTop" />
+        </items>
+      </VBox>
+    </content>
+  </Page>
+</mvc:View>

@@ -1,0 +1,27 @@
+{
+  "name": "inquiry-assign-system",
+  "version": "1.0.0",
+  "description": "問い合わせ受付・AI仮アサインシステム（ハッカソン・ローカルデモ版）",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "start": "cds-serve",
+    "dev": "cds watch"
+  },
+  "dependencies": {
+    "@sap-ai-sdk/orchestration": "^2",
+    "@sap/cds": "^7",
+    "express": "^4",
+    "sqlite3": "^5"
+  },
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "sqlite",
+        "credentials": { "url": ":memory:" }
+      },
+      "[production]": {
+        "db": { "kind": "hana" }
+      }
+    }
+  }
+}

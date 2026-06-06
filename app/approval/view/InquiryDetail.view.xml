@@ -1,0 +1,126 @@
+<mvc:View
+  controllerName="approval.controller.InquiryDetail"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:uxap="sap.uxap"
+  xmlns:l="sap.ui.layout"
+  xmlns:f="sap.ui.layout.form"
+  displayBlock="true">
+
+  <Page showHeader="false">
+    <content>
+      <uxap:ObjectPageLayout id="detailPage" showTitleInHeaderContent="true">
+
+        <uxap:headerTitle>
+          <uxap:ObjectPageDynamicHeaderTitle>
+            <uxap:navigationActions>
+              <Button icon="sap-icon://nav-back" tooltip="一覧へ戻る" press=".onNavBack" />
+            </uxap:navigationActions>
+            <uxap:heading>
+              <HBox alignItems="Center">
+                <Title text="{inquiryNo}" level="H2" />
+                <ObjectStatus
+                  text="{status}"
+                  state="{= ${status} === '承認済み' ? 'Success' : ${status} === '承認待ち' ? 'Warning' : 'None' }"
+                  class="sapUiSmallMarginBegin" />
+              </HBox>
+            </uxap:heading>
+            <uxap:actions>
+              <Button id="approveBtn" text="承認"
+                type="Emphasized" press=".onApprove"
+                visible="{= ${status} === '承認待ち' }" />
+            </uxap:actions>
+          </uxap:ObjectPageDynamicHeaderTitle>
+        </uxap:headerTitle>
+
+        <uxap:sections>
+
+          <!-- 問い合わせ情報 -->
+          <uxap:ObjectPageSection title="問い合わせ情報" titleUppercase="false">
+            <uxap:subSections>
+              <uxap:ObjectPageSubSection title="">
+                <f:SimpleForm editable="false" layout="ResponsiveGridLayout"
+                  labelSpanXL="3" labelSpanL="3" labelSpanM="4" labelSpanS="12"
+                  columnsXL="2" columnsL="2" columnsM="1">
+                  <f:content>
+                    <Label text="会社名" /><Text text="{companyName}" />
+                    <Label text="担当者名" /><Text text="{contactName}" />
+                    <Label text="種別" /><Text text="{inquiryType}" />
+                    <Label text="優先度" />
+                    <ObjectStatus text="{priority}"
+                      state="{= ${priority} === '高' ? 'Error' : ${priority} === '中' ? 'Warning' : 'None' }" />
+                    <Label text="対応希望日" /><Text text="{desiredResponseDate}" />
+                    <Label text="起票日時" /><Text text="{path: 'createdAt', formatter: '.formatDateTime'}" />
+                    <Label text="件名" /><Text text="{subject}" />
+                    <Label text="内容" /><Text text="{content}" wrapping="true" />
+                  </f:content>
+                </f:SimpleForm>
+              </uxap:ObjectPageSubSection>
+            </uxap:subSections>
+          </uxap:ObjectPageSection>
+
+          <!-- AI①分析結果 -->
+          <uxap:ObjectPageSection title="AI① 分析結果" titleUppercase="false">
+            <uxap:subSections>
+              <uxap:ObjectPageSubSection title="">
+                <f:SimpleForm editable="false" layout="ResponsiveGridLayout"
+                  labelSpanXL="3" labelSpanL="3" labelSpanM="4" labelSpanS="12"
+                  columnsXL="1" columnsL="1" columnsM="1">
+                  <f:content>
+                    <Label text="要約" />
+                    <Text text="{aiSummary}" wrapping="true" />
+                    <Label text="簡易回答" />
+                    <Text text="{aiAnswer}" wrapping="true" />
+                    <Label text="必要スキル" />
+                    <Text text="{aiRequiredSkills}" />
+                    <Label text="不足情報" />
+                    <Text text="{aiMissingInfo}" wrapping="true" />
+                  </f:content>
+                </f:SimpleForm>
+              </uxap:ObjectPageSubSection>
+            </uxap:subSections>
+          </uxap:ObjectPageSection>
+
+          <!-- AI②仮アサイン候補 -->
+          <uxap:ObjectPageSection title="AI② 仮アサイン候補" titleUppercase="false">
+            <uxap:subSections>
+              <uxap:ObjectPageSubSection title="">
+                <Table id="candidatesTable"
+                  mode="SingleSelectLeft"
+                  selectionChange=".onCandidateSelect"
+                  updateFinished=".onCandidatesLoaded"
+                  items="{
+                    path: 'candidates',
+                    parameters: { $expand: 'member', $orderby: 'rank' }
+                  }"
+                  noDataText="候補なし（AIが未実行またはメンバーなし）">
+                  <columns>
+                    <Column width="4rem"><Text text="順位" /></Column>
+                    <Column><Text text="担当者名" /></Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="スキル" /></Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="担当領域" /></Column>
+                    <Column minScreenWidth="Desktop" demandPopin="true"><Text text="現在対応件数" /></Column>
+                    <Column><Text text="アサイン理由" /></Column>
+                  </columns>
+                  <items>
+                    <ColumnListItem>
+                      <cells>
+                        <ObjectNumber number="{rank}" unit="位" emphasized="true" />
+                        <Text text="{member/name}" />
+                        <Text text="{member/skills}" />
+                        <Text text="{member/domain}" />
+                        <Text text="{member/currentCases}" />
+                        <Text text="{reason}" wrapping="true" />
+                      </cells>
+                    </ColumnListItem>
+                  </items>
+                </Table>
+              </uxap:ObjectPageSubSection>
+            </uxap:subSections>
+          </uxap:ObjectPageSection>
+
+        </uxap:sections>
+      </uxap:ObjectPageLayout>
+    </content>
+  </Page>
+</mvc:View>

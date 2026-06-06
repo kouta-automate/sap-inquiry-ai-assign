@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(ls \"C:\\\\Program Files\\\\nodejs\" 2>&1 | head -20)",
+      "Read(//c/Program Files/nodejs/**)",
+      "Bash(nvm version *)",
+      "Bash(npm cache *)",
+      "Bash(ls \"$\\(npm cache dir\\)/node-gyp\")",
+      "Bash(cds --version)",
+      "Bash(npm ls *)",
+      "Bash(npm list *)",
+      "Bash(node -e \"console.log\\('abi:', process.versions.modules, 'uv:', process.versions.uv\\)\")",
+      "Bash(ls \"C:\\\\Program Files \\(x86\\)\\\\Microsoft Visual Studio\" 2>&1 | head -5 && ls \"C:\\\\Program Files\\\\Microsoft Visual Studio\" 2>&1 | head -5)",
+      "Read(//c/Program Files \\(x86\\)/Microsoft Visual Studio/**)",
+      "Read(//c/Program Files/**)",
+      "WebFetch(domain:github.com)",
+      "Bash(node -e ' *)",
+      "Read(//tmp/**)",
+      "Bash(node -e \"const db = require\\('sqlite3'\\); console.log\\('sqlite3 ok:', db.VERSION\\);\")",
+      "Bash(where cl.exe)",
+      "Bash(where msbuild.exe)",
+      "Bash(where choco *)",
+      "Bash(node -e \"const cds = require\\('@sap/cds'\\); console.log\\('cds version:', cds.version\\);\")",
+      "Bash(timeout 15 node_modules/.bin/cds compile db/schema.cds)",
+      "PowerShell(Get-Command cds -ErrorAction SilentlyContinue)",
+      "PowerShell($env:PATH)",
+      "PowerShell(npm install -g @sap/cds-dk 2>&1)",
+      "PowerShell(cds --version)",
+      "PowerShell(npm install -g @sap/cds-dk@8 2>&1)",
+      "Bash(timeout 8 node_modules/.bin/cds-serve)",
+      "Bash(timeout 10 node_modules/.bin/cds-serve)",
+      "Bash(timeout 12 node_modules/.bin/cds-serve)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\kouta\\99_プログラミング\\50_ハッカソン_問い合わせ受付仮アサイン_BTP"
+    ]
+  }
+}

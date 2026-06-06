@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BTP ソリューションアーキテクチャ図 — 問い合わせ受付仮アサインシステム</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+    background: #EDEFF0;
+    margin: 0;
+    padding: 24px;
+    color: #1C1C1C;
+  }
+  .page {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 8px;
+    padding: 28px 32px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+  }
+  .header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #005DB8;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: #6A6D70;
+  }
+  .legend {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    margin-bottom: 20px;
+    padding: 10px 16px;
+    background: #F5F6F7;
+    border-radius: 6px;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .legend-box {
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .impl-box   { background: #E8F3FF; border: 2px solid #0070F2; }
+  .frame-box  { background: #FEF5E7; border: 2px solid #E78F16; }
+  .notimpl-box{ background: #F4F4F4; border: 2px dashed #BFBFBF; }
+  .ai-box     { background: #EDF7ED; border: 2px solid #107E3E; }
+  .diagram { width: 100%; overflow-x: auto; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="title">問い合わせ受付仮アサインシステム — BTP ソリューションアーキテクチャ図</div>
+    <div class="subtitle">SAP CAP (Node.js) + SAP UI5 + SAP AI Core / Generative AI Hub | ハッカソン 2026</div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-box impl-box"></div>✅ 実装済み（ローカル動作確認済み）</div>
+    <div class="legend-item"><div class="legend-box ai-box"></div>✅ AI機能 実装済み</div>
+    <div class="legend-item"><div class="legend-box frame-box"></div>⚡ フレームワーク実装済み（接続設定のみ必要）</div>
+    <div class="legend-item"><div class="legend-box notimpl-box"></div>🔲 未実装（BTP本番デプロイ時に必要）</div>
+  </div>
+
+  <div class="diagram">
+  <svg width="1140" height="890" viewBox="0 0 1140 890" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="arr-blue" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto">
+        <polygon points="0 0, 9 3, 0 6" fill="#0070F2"/>
+      </marker>
+      <marker id="arr-gray" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto">
+        <polygon points="0 0, 9 3, 0 6" fill="#BFBFBF"/>
+      </marker>
+      <marker id="arr-green" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto">
+        <polygon points="0 0, 9 3, 0 6" fill="#107E3E"/>
+      </marker>
+      <marker id="arr-orange" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto">
+        <polygon points="0 0, 9 3, 0 6" fill="#E78F16"/>
+      </marker>
+      <marker id="arr-dark" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto">
+        <polygon points="0 0, 9 3, 0 6" fill="#32363A"/>
+      </marker>
+    </defs>
+
+    <!-- ========================================================== -->
+    <!-- BTP GLOBAL ACCOUNT BORDER                                   -->
+    <!-- ========================================================== -->
+    <rect x="3" y="3" width="1134" height="884" rx="10"
+          fill="#F0F6FF" stroke="#0070F2" stroke-width="2" stroke-dasharray="10,4"/>
+    <text x="570" y="24" text-anchor="middle" font-size="12" font-weight="bold" fill="#0070F2">
+      SAP BTP Global Account
+    </text>
+
+    <!-- ========================================================== -->
+    <!-- SUBACCOUNT BORDER                                           -->
+    <!-- ========================================================== -->
+    <rect x="15" y="35" width="1110" height="845" rx="7"
+          fill="none" stroke="#5AB0F5" stroke-width="1.5" stroke-dasharray="6,3"/>
+    <text x="570" y="54" text-anchor="middle" font-size="11" fill="#2B7BC0">
+      Subaccount: 問い合わせ受付システム（目標アーキテクチャ）
+    </text>
+
+    <!-- ========================================================== -->
+    <!-- COLUMN 1: EXTERNAL USERS                                    -->
+    <!-- ========================================================== -->
+
+    <!-- 顧客 -->
+    <rect x="20" y="125" width="148" height="90" rx="8"
+          fill="white" stroke="#32363A" stroke-width="1.5"/>
+    <text x="94" y="155" text-anchor="middle" font-size="28" fill="#32363A">👤</text>
+    <text x="94" y="178" text-anchor="middle" font-size="12" font-weight="bold" fill="#32363A">顧客</text>
+    <text x="94" y="192" text-anchor="middle" font-size="9" fill="#6A6D70">Customer</text>
+    <text x="94" y="206" text-anchor="middle" font-size="9" fill="#6A6D70">問い合わせ送信</text>
+
+    <!-- 管理者 -->
+    <rect x="20" y="480" width="148" height="90" rx="8"
+          fill="white" stroke="#32363A" stroke-width="1.5"/>
+    <text x="94" y="510" text-anchor="middle" font-size="28" fill="#32363A">👤</text>
+    <text x="94" y="533" text-anchor="middle" font-size="12" font-weight="bold" fill="#32363A">管理者</text>
+    <text x="94" y="547" text-anchor="middle" font-size="9" fill="#6A6D70">Manager</text>
+    <text x="94" y="561" text-anchor="middle" font-size="9" fill="#6A6D70">仮アサイン承認</text>
+
+    <!-- ========================================================== -->
+    <!-- AUTH / ROUTING LAYER (Top)                                  -->
+    <!-- ========================================================== -->
+
+    <!-- App Router (未実装) -->
+    <rect x="195" y="65" width="195" height="72" rx="6"
+          fill="#F4F4F4" stroke="#BFBFBF" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <text x="292" y="90" text-anchor="middle" font-size="11" font-weight="bold" fill="#6A6D70">🔲 SAP App Router</text>
+    <text x="292" y="106" text-anchor="middle" font-size="9" fill="#8F8F8F">ルーティング・認証プロキシ</text>
+    <text x="292" y="120" text-anchor="middle" font-size="9" fill="#8F8F8F">xs-app.json / CF Route 未実装</text>
+
+    <!-- XSUAA / IAS (未実装) -->
+    <rect x="420" y="65" width="200" height="72" rx="6"
+          fill="#F4F4F4" stroke="#BFBFBF" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <text x="520" y="90" text-anchor="middle" font-size="11" font-weight="bold" fill="#6A6D70">🔲 XSUAA / IAS</text>
+    <text x="520" y="106" text-anchor="middle" font-size="9" fill="#8F8F8F">認証・認可サービス</text>
+    <text x="520" y="120" text-anchor="middle" font-size="9" fill="#8F8F8F">xs-security.json 未実装</text>
+
+    <!-- ========================================================== -->
+    <!-- COLUMN 2: FRONTEND UI5 APPS                                 -->
+    <!-- ========================================================== -->
+
+    <!-- UI5 問い合わせフォーム (実装済み) -->
+    <rect x="195" y="158" width="215" height="148" rx="7"
+          fill="#E8F3FF" stroke="#0070F2" stroke-width="2"/>
+    <text x="302" y="183" text-anchor="middle" font-size="22">📋</text>
+    <text x="302" y="208" text-anchor="middle" font-size="12" font-weight="bold" fill="#005DB8">✅ UI5 問い合わせフォーム</text>
+    <text x="302" y="223" text-anchor="middle" font-size="9" fill="#0070F2">app/inquiry/</text>
+    <text x="302" y="242" text-anchor="middle" font-size="9" fill="#32363A">• 7項目入力フォーム＋バリデーション</text>
+    <text x="302" y="257" text-anchor="middle" font-size="9" fill="#32363A">• 問い合わせ種別 / 優先度 / 希望日</text>
+    <text x="302" y="272" text-anchor="middle" font-size="9" fill="#32363A">• 受付番号通知画面（INQ-YYYYMMDD-###）</text>
+    <text x="302" y="287" text-anchor="middle" font-size="9" fill="#6A6D70">SAP UI5 (OpenUI5 SDK)</text>
+    <text x="302" y="298" text-anchor="middle" font-size="9" fill="#6A6D70">SimpleForm / MessageBox</text>
+
+    <!-- UI5 承認アプリ (実装済み) -->
+    <rect x="195" y="455" width="215" height="165" rx="7"
+          fill="#E8F3FF" stroke="#0070F2" stroke-width="2"/>
+    <text x="302" y="482" text-anchor="middle" font-size="22">✅</text>
+    <text x="302" y="505" text-anchor="middle" font-size="12" font-weight="bold" fill="#005DB8">✅ UI5 承認アプリ</text>
+    <text x="302" y="520" text-anchor="middle" font-size="9" fill="#0070F2">app/approval/</text>
+    <text x="302" y="539" text-anchor="middle" font-size="9" fill="#32363A">• 問い合わせ一覧（ステータス色分け）</text>
+    <text x="302" y="554" text-anchor="middle" font-size="9" fill="#32363A">• AI分析結果表示（要約/回答案/スキル）</text>
+    <text x="302" y="569" text-anchor="middle" font-size="9" fill="#32363A">• 仮アサイン候補 Top3 表示・選択</text>
+    <text x="302" y="584" text-anchor="middle" font-size="9" fill="#32363A">• 承認アクション → 担当者確定</text>
+    <text x="302" y="600" text-anchor="middle" font-size="9" fill="#6A6D70">SAP UI5 / Fiori Object Page</text>
+    <text x="302" y="612" text-anchor="middle" font-size="9" fill="#6A6D70">Table / RadioButton Selection</text>
+
+    <!-- ========================================================== -->
+    <!-- COLUMN 3: CAP BACKEND SERVICE                               -->
+    <!-- ========================================================== -->
+
+    <rect x="440" y="155" width="290" height="500" rx="7"
+          fill="#E8F3FF" stroke="#0070F2" stroke-width="2"/>
+
+    <!-- Header -->
+    <text x="585" y="182" text-anchor="middle" font-size="13" font-weight="bold" fill="#005DB8">✅ SAP CAP Backend Service</text>
+    <text x="585" y="198" text-anchor="middle" font-size="10" fill="#0070F2">Node.js | @sap/cds v7 | localhost:4004</text>
+
+    <line x1="450" y1="208" x2="720" y2="208" stroke="#91C8FF" stroke-width="1"/>
+
+    <!-- OData V4 -->
+    <text x="585" y="228" text-anchor="middle" font-size="11" font-weight="bold" fill="#32363A">OData V4 Service</text>
+    <text x="585" y="243" text-anchor="middle" font-size="9" fill="#6A6D70">srv/inquiry-service.cds</text>
+
+    <!-- Actions -->
+    <rect x="453" y="256" width="125" height="58" rx="4" fill="white" stroke="#0070F2" stroke-width="1.5"/>
+    <text x="515" y="278" text-anchor="middle" font-size="10" font-weight="bold" fill="#0070F2">submitInquiry</text>
+    <text x="515" y="293" text-anchor="middle" font-size="9" fill="#32363A">問い合わせ受付</text>
+    <text x="515" y="306" text-anchor="middle" font-size="9" fill="#32363A">採番・非同期起動</text>
+
+    <rect x="594" y="256" width="125" height="58" rx="4" fill="white" stroke="#0070F2" stroke-width="1.5"/>
+    <text x="656" y="278" text-anchor="middle" font-size="10" font-weight="bold" fill="#0070F2">approve</text>
+    <text x="656" y="293" text-anchor="middle" font-size="9" fill="#32363A">承認アクション</text>
+    <text x="656" y="306" text-anchor="middle" font-size="9" fill="#32363A">担当者確定</text>
+
+    <!-- AI Pipeline box (inside CAP) -->
+    <rect x="453" y="327" width="266" height="108" rx="5"
+          fill="#EDF7ED" stroke="#107E3E" stroke-width="1.5"/>
+    <text x="586" y="350" text-anchor="middle" font-size="11" font-weight="bold" fill="#107E3E">✅ AI Pipeline（非同期実行）</text>
+    <text x="586" y="367" text-anchor="middle" font-size="9" fill="#107E3E">setImmediate / srv/inquiry-service.js</text>
+    <text x="586" y="386" text-anchor="middle" font-size="9" fill="#32363A">AI① 問い合わせ分析</text>
+    <text x="586" y="400" text-anchor="middle" font-size="9" fill="#6A6D70">  要約 / 回答案 / 必要スキル / 不足情報</text>
+    <text x="586" y="415" text-anchor="middle" font-size="9" fill="#32363A">AI② メンバー仮アサイン</text>
+    <text x="586" y="429" text-anchor="middle" font-size="9" fill="#6A6D70">  スキル適合度＋担当件数 Top 3候補</text>
+
+    <!-- DB Entities -->
+    <line x1="450" y1="447" x2="720" y2="447" stroke="#91C8FF" stroke-width="1"/>
+    <text x="585" y="467" text-anchor="middle" font-size="11" font-weight="bold" fill="#32363A">DB エンティティ</text>
+    <text x="585" y="484" text-anchor="middle" font-size="9" fill="#6A6D70">db/schema.cds</text>
+    <text x="585" y="502" text-anchor="middle" font-size="9" fill="#32363A">📄 Inquiries  👥 Members (8名)  🗂 AssignCandidates</text>
+    <text x="585" y="518" text-anchor="middle" font-size="9" fill="#32363A">メンバー: スキル / 担当領域 / 現在担当件数 / ステータス</text>
+
+    <!-- Status Flow -->
+    <line x1="450" y1="532" x2="720" y2="532" stroke="#91C8FF" stroke-width="1"/>
+    <text x="585" y="550" text-anchor="middle" font-size="10" font-weight="bold" fill="#32363A">ステータス遷移</text>
+    <text x="473" y="572" font-size="9" fill="#32363A">AI分析中</text>
+    <line x1="522" y1="568" x2="548" y2="568" stroke="#32363A" stroke-width="1.5" marker-end="url(#arr-dark)"/>
+    <text x="560" y="572" font-size="9" fill="#32363A">承認待ち</text>
+    <line x1="608" y1="568" x2="634" y2="568" stroke="#32363A" stroke-width="1.5" marker-end="url(#arr-dark)"/>
+    <text x="646" y="572" font-size="9" fill="#32363A">承認済み</text>
+
+    <text x="585" y="592" text-anchor="middle" font-size="9" fill="#BB0000">⚠ 拒否フロー 未実装</text>
+
+    <!-- AI Handler switcher -->
+    <rect x="453" y="602" width="266" height="42" rx="4"
+          fill="#FFFAEF" stroke="#E78F16" stroke-width="1.5"/>
+    <text x="586" y="622" text-anchor="middle" font-size="9" font-weight="bold" fill="#B55D00">AI切替: USE_MOCK_AI フラグ (.env)</text>
+    <text x="586" y="638" text-anchor="middle" font-size="9" fill="#32363A">true → ai-mock.js（オフライン） / false → ai-real.js（AI Core接続）</text>
+
+    <!-- ========================================================== -->
+    <!-- COLUMN 4: RIGHT SERVICES                                    -->
+    <!-- ========================================================== -->
+
+    <!-- SAP Build Work Zone (未実装) -->
+    <rect x="768" y="65" width="215" height="72" rx="6"
+          fill="#F4F4F4" stroke="#BFBFBF" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <text x="875" y="90" text-anchor="middle" font-size="11" font-weight="bold" fill="#6A6D70">🔲 SAP Build Work Zone</text>
+    <text x="875" y="106" text-anchor="middle" font-size="9" fill="#8F8F8F">Fiori Launchpad 統合</text>
+    <text x="875" y="120" text-anchor="middle" font-size="9" fill="#8F8F8F">未実装（本番デプロイ時に必要）</text>
+
+    <!-- SQLite (実装済み) -->
+    <rect x="768" y="158" width="215" height="90" rx="6"
+          fill="#E8F3FF" stroke="#0070F2" stroke-width="2"/>
+    <text x="875" y="186" text-anchor="middle" font-size="24">🗄️</text>
+    <text x="875" y="210" text-anchor="middle" font-size="11" font-weight="bold" fill="#005DB8">✅ SQLite in-memory</text>
+    <text x="875" y="225" text-anchor="middle" font-size="9" fill="#32363A">ローカル開発用 DB（cds watch）</text>
+    <text x="875" y="240" text-anchor="middle" font-size="9" fill="#6A6D70">起動時に CSV シードデータ投入</text>
+
+    <!-- HANA Cloud (未実装) -->
+    <rect x="768" y="265" width="215" height="90" rx="6"
+          fill="#F4F4F4" stroke="#BFBFBF" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <text x="875" y="293" text-anchor="middle" font-size="24" fill="#8F8F8F">🗄️</text>
+    <text x="875" y="317" text-anchor="middle" font-size="11" font-weight="bold" fill="#6A6D70">🔲 SAP HANA Cloud</text>
+    <text x="875" y="332" text-anchor="middle" font-size="9" fill="#8F8F8F">本番用データベース</text>
+    <text x="875" y="347" text-anchor="middle" font-size="9" fill="#8F8F8F">package.json に設定あり・未接続</text>
+
+    <!-- AI Mock (実装済み) -->
+    <rect x="768" y="372" width="215" height="110" rx="6"
+          fill="#EDF7ED" stroke="#107E3E" stroke-width="2"/>
+    <text x="875" y="400" text-anchor="middle" font-size="24">🤖</text>
+    <text x="875" y="425" text-anchor="middle" font-size="11" font-weight="bold" fill="#107E3E">✅ AI Mock Engine</text>
+    <text x="875" y="441" text-anchor="middle" font-size="9" fill="#32363A">srv/ai-mock.js</text>
+    <text x="875" y="458" text-anchor="middle" font-size="9" fill="#32363A">問い合わせタイプ別パターン応答</text>
+    <text x="875" y="473" text-anchor="middle" font-size="9" fill="#32363A">スキルマッチ＋負荷スコアでソート</text>
+
+    <!-- SAP AI Core / GenAI Hub (フレームワーク実装済み) -->
+    <rect x="768" y="500" width="215" height="120" rx="6"
+          fill="#FEF5E7" stroke="#E78F16" stroke-width="2"/>
+    <text x="875" y="528" text-anchor="middle" font-size="24">🧠</text>
+    <text x="875" y="554" text-anchor="middle" font-size="11" font-weight="bold" fill="#B55D00">⚡ SAP AI Core</text>
+    <text x="875" y="570" text-anchor="middle" font-size="11" font-weight="bold" fill="#B55D00">Generative AI Hub</text>
+    <text x="875" y="587" text-anchor="middle" font-size="9" fill="#8F5A00">srv/ai-real.js（コード実装済み）</text>
+    <text x="875" y="602" text-anchor="middle" font-size="9" fill="#8F5A00">@sap-ai-sdk/orchestration v2</text>
+    <text x="875" y="617" text-anchor="middle" font-size="9" fill="#8F5A00">.env の AICORE_SERVICE_KEY 設定のみ必要</text>
+
+    <!-- CF Runtime (未実装) -->
+    <rect x="768" y="640" width="215" height="90" rx="6"
+          fill="#F4F4F4" stroke="#BFBFBF" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <text x="875" y="668" text-anchor="middle" font-size="11" font-weight="bold" fill="#6A6D70">🔲 Cloud Foundry Runtime</text>
+    <text x="875" y="684" text-anchor="middle" font-size="9" fill="#8F8F8F">BTP本番デプロイ環境</text>
+    <text x="875" y="700" text-anchor="middle" font-size="9" fill="#8F8F8F">mta.yaml / manifest.yml 未実装</text>
+    <text x="875" y="716" text-anchor="middle" font-size="9" fill="#8F8F8F">CI/CD パイプライン 未実装</text>
+
+    <!-- ========================================================== -->
+    <!-- ARROWS                                                      -->
+    <!-- ========================================================== -->
+
+    <!-- 顧客 → UI5 問い合わせフォーム -->
+    <path d="M 168 170 L 192 200" stroke="#0070F2" stroke-width="2"
+          fill="none" marker-end="url(#arr-blue)"/>
+    <text x="155" y="183" font-size="9" fill="#0070F2">HTTP</text>
+
+    <!-- 管理者 → UI5 承認アプリ -->
+    <path d="M 168 525 L 192 525" stroke="#0070F2" stroke-width="2"
+          fill="none" marker-end="url(#arr-blue)"/>
+    <text x="155" y="518" font-size="9" fill="#0070F2">HTTP</text>
+
+    <!-- UI5 問い合わせフォーム → CAP (OData V4) -->
+    <path d="M 410 232 L 437 270" stroke="#0070F2" stroke-width="2"
+          fill="none" marker-end="url(#arr-blue)"/>
+    <text x="404" y="252" font-size="9" fill="#0070F2">OData V4</text>
+
+    <!-- UI5 承認アプリ → CAP (OData V4) -->
+    <path d="M 410 510 L 437 470" stroke="#0070F2" stroke-width="2"
+          fill="none" marker-end="url(#arr-blue)"/>
+    <text x="404" y="500" font-size="9" fill="#0070F2">OData V4</text>
+
+    <!-- App Router → UI5 (dashed, 未実装ルート) -->
+    <path d="M 292 137 L 292 155" stroke="#BFBFBF" stroke-width="1.5" stroke-dasharray="4,3"
+          fill="none" marker-end="url(#arr-gray)"/>
+
+    <!-- App Router ↔ XSUAA (dashed) -->
+    <path d="M 390 100 L 417 100" stroke="#BFBFBF" stroke-width="1.5" stroke-dasharray="4,3"
+          fill="none" marker-end="url(#arr-gray)"/>
+
+    <!-- CAP → SQLite -->
+    <path d="M 730 215 L 765 215" stroke="#0070F2" stroke-width="2"
+          fill="none" marker-end="url(#arr-blue)"/>
+
+    <!-- CAP → HANA Cloud (dashed) -->
+    <path d="M 730 310 L 765 310" stroke="#BFBFBF" stroke-width="1.5" stroke-dasharray="4,3"
+          fill="none" marker-end="url(#arr-gray)"/>
+
+    <!-- CAP → AI Mock -->
+    <path d="M 730 427 L 765 427" stroke="#107E3E" stroke-width="2"
+          fill="none" marker-end="url(#arr-green)"/>
+
+    <!-- CAP → AI Core (orange, framework) -->
+    <path d="M 730 560 L 765 560" stroke="#E78F16" stroke-width="1.5" stroke-dasharray="5,3"
+          fill="none" marker-end="url(#arr-orange)"/>
+
+    <!-- App Router → CAP (dashed) -->
+    <path d="M 390 100 Q 585 100 585 152" stroke="#BFBFBF" stroke-width="1.5" stroke-dasharray="4,3"
+          fill="none" marker-end="url(#arr-gray)"/>
+
+    <!-- Build Work Zone → UI5 (dashed) -->
+    <path d="M 875 137 Q 875 148 585 148" stroke="#BFBFBF" stroke-width="1.2" stroke-dasharray="4,3"
+          fill="none"/>
+
+    <!-- ========================================================== -->
+    <!-- PROCESS FLOW ANNOTATION (bottom)                            -->
+    <!-- ========================================================== -->
+    <rect x="20" y="760" width="730" height="112" rx="6"
+          fill="#F5F6F7" stroke="#91C8FF" stroke-width="1.5"/>
+    <text x="385" y="783" text-anchor="middle" font-size="12" font-weight="bold" fill="#005DB8">📌 主要処理フロー</text>
+
+    <text x="35" y="802" font-size="10" font-weight="bold" fill="#32363A">① 受付</text>
+    <text x="35" y="817" font-size="9" fill="#6A6D70">顧客がフォーム入力 → submitInquiry → INQ-YYYYMMDD-### 採番 → 即座に受付番号通知（AI分析は非同期）</text>
+
+    <text x="35" y="836" font-size="10" font-weight="bold" fill="#32363A">② AI分析（バックグラウンド）</text>
+    <text x="35" y="851" font-size="9" fill="#6A6D70">AI①: 内容分析（要約/回答案/必要スキル/不足情報）→ AI②: スキルマッチ＋負荷スコアで Top3 候補生成 → 承認待ちへ</text>
+
+    <text x="35" y="870" font-size="10" font-weight="bold" fill="#32363A">③ 承認</text>
+    <text x="35" y="862" font-size="9" fill="#6A6D70"> </text>
+    <!-- Shift this text down since it overlaps -->
+
+    <!-- Redrawn process flow text to avoid overlap -->
+    <rect x="20" y="760" width="730" height="118" rx="6"
+          fill="#F5F6F7" stroke="#91C8FF" stroke-width="1.5"/>
+    <text x="385" y="781" text-anchor="middle" font-size="12" font-weight="bold" fill="#005DB8">📌 主要処理フロー</text>
+
+    <text x="36" y="800" font-size="10" font-weight="bold" fill="#32363A">① 受付</text>
+    <text x="90" y="800" font-size="9" fill="#6A6D70">フォーム入力 → submitInquiry → INQ-YYYYMMDD-### 採番 → 即座に受付番号通知（AI は非同期）</text>
+
+    <text x="36" y="820" font-size="10" font-weight="bold" fill="#32363A">② AI分析</text>
+    <text x="90" y="820" font-size="9" fill="#6A6D70">AI① 内容分析（要約/回答案/必要スキル/不足情報） → AI② スキルマッチ＋負荷で Top3候補生成 → 承認待ちに遷移</text>
+
+    <text x="36" y="840" font-size="10" font-weight="bold" fill="#32363A">③ 承認</text>
+    <text x="90" y="840" font-size="9" fill="#6A6D70">管理者が承認アプリで候補確認 → 1名選択 → approve → 担当者確定・ステータス=承認済み</text>
+
+    <text x="36" y="860" font-size="10" font-weight="bold" fill="#BB0000">⚠ 未実装</text>
+    <text x="90" y="860" font-size="9" fill="#BB0000">拒否フロー / 認証(XSUAA) / メール通知 / BTPデプロイ(mta.yaml) / HANA Cloud / Build Work Zone / CI/CD</text>
+
+    <text x="36" y="874" font-size="10" font-weight="bold" fill="#E78F16">⚡ 要設定</text>
+    <text x="90" y="874" font-size="9" fill="#B55D00">SAP AI Core 接続: USE_MOCK_AI=false ＋ .env に AICORE_SERVICE_KEY を設定するだけで本番AI利用可能</text>
+
+  </svg>
+  </div>
+
+  <div style="margin-top: 16px; padding: 12px 16px; background: #F5F6F7; border-radius: 6px; font-size: 11px; color: #6A6D70; text-align: center;">
+    生成日: 2026-06-06 &nbsp;|&nbsp;
+    SAP CAP (Node.js) v7 &nbsp;|&nbsp;
+    SAP UI5 (OpenUI5 SDK) &nbsp;|&nbsp;
+    @sap-ai-sdk/orchestration v2 &nbsp;|&nbsp;
+    SQLite / SAP HANA Cloud &nbsp;|&nbsp;
+    Port: localhost:4004
+  </div>
+
+</div>
+</body>
+</html>

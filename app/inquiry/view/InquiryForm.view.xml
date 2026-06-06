@@ -1,0 +1,78 @@
+<mvc:View
+  controllerName="inquiry.controller.InquiryForm"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:l="sap.ui.layout"
+  xmlns:f="sap.ui.layout.form"
+  displayBlock="true">
+
+  <Page title="問い合わせ入力" showNavButton="false">
+    <content>
+      <FlexBox justifyContent="Center" width="100%" class="sapUiMediumMarginTop sapUiMediumMarginBottom">
+      <f:SimpleForm
+        id="inquiryForm"
+        editable="true"
+        layout="ResponsiveGridLayout"
+        labelSpanXL="3" labelSpanL="3" labelSpanM="4" labelSpanS="12"
+        adjustLabelSpan="false"
+        columnsXL="1" columnsL="1" columnsM="1"
+        width="700px">
+
+        <f:content>
+          <!-- 会社名 -->
+          <Label text="会社名" required="true" />
+          <Input id="companyName" placeholder="例：みらい商事株式会社" maxLength="100" />
+
+          <!-- 担当者名 -->
+          <Label text="担当者名" required="true" />
+          <Input id="contactName" placeholder="例：山田 太郎" maxLength="100" />
+
+          <!-- 問い合わせ種別 -->
+          <Label text="問い合わせ種別" required="true" />
+          <Select id="inquiryType">
+            <items>
+              <core:Item xmlns:core="sap.ui.core" key="" text="選択してください" />
+              <core:Item xmlns:core="sap.ui.core" key="障害"    text="障害" />
+              <core:Item xmlns:core="sap.ui.core" key="質問"    text="質問" />
+              <core:Item xmlns:core="sap.ui.core" key="要望"    text="要望" />
+              <core:Item xmlns:core="sap.ui.core" key="権限申請" text="権限申請" />
+              <core:Item xmlns:core="sap.ui.core" key="その他"  text="その他" />
+            </items>
+          </Select>
+
+          <!-- 優先度 -->
+          <Label text="優先度" required="true" />
+          <RadioButtonGroup id="priority" columns="3" selectedIndex="1">
+            <buttons>
+              <RadioButton id="pHigh" text="高" />
+              <RadioButton id="pMid"  text="中" />
+              <RadioButton id="pLow"  text="低" />
+            </buttons>
+          </RadioButtonGroup>
+
+          <!-- 対応希望日 -->
+          <Label text="対応希望日" />
+          <DatePicker id="desiredResponseDate" valueFormat="yyyy-MM-dd" displayFormat="yyyy/MM/dd" placeholder="任意" showWeekNumbers="false" />
+
+          <!-- 件名 -->
+          <Label text="件名" required="true" />
+          <Input id="subject" placeholder="例：FI転記でダンプが発生する" maxLength="200" />
+
+          <!-- 問い合わせ内容 -->
+          <Label text="問い合わせ内容" required="true" />
+          <TextArea id="content" rows="6" growing="true" maxLength="5000"
+            placeholder="詳細な問い合わせ内容を入力してください" width="100%" />
+        </f:content>
+      </f:SimpleForm>
+      </FlexBox>
+    </content>
+
+    <footer>
+      <OverflowToolbar>
+        <ToolbarSpacer />
+        <Button id="submitBtn" text="送信する" type="Emphasized"
+          press=".onSubmit" icon="sap-icon://paper-plane" />
+      </OverflowToolbar>
+    </footer>
+  </Page>
+</mvc:View>

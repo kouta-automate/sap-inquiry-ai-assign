@@ -1,0 +1,60 @@
+{
+  "_version": "1.65.0",
+  "sap.app": {
+    "id": "approval",
+    "type": "application",
+    "title": "上長承認",
+    "description": "問い合わせ一覧・AI仮アサイン承認",
+    "applicationVersion": { "version": "1.0.0" },
+    "dataSources": {
+      "InquiryService": {
+        "uri": "/odata/v4/InquiryService/",
+        "type": "OData",
+        "settings": { "odataVersion": "4.0" }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "fullWidth": true
+  },
+  "sap.ui5": {
+    "rootView": {
+      "viewName": "approval.view.App",
+      "type": "XML",
+      "async": true,
+      "id": "app"
+    },
+    "dependencies": {
+      "minUI5Version": "1.120.0",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.layout": {},
+        "sap.uxap": {}
+      }
+    },
+    "models": {
+      "": {
+        "dataSource": "InquiryService",
+        "settings": { "synchronizationMode": "None", "operationMode": "Server" }
+      }
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "controlId": "appControl",
+        "controlAggregation": "pages",
+        "async": true
+      },
+      "routes": [
+        { "name": "list",   "pattern": "",            "target": "list" },
+        { "name": "detail", "pattern": "detail/{id}", "target": "detail" }
+      ],
+      "targets": {
+        "list":   { "viewName": "approval.view.InquiryList",   "viewLevel": 1 },
+        "detail": { "viewName": "approval.view.InquiryDetail", "viewLevel": 2 }
+      }
+    }
+  }
+}

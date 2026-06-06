@@ -1,0 +1,58 @@
+<mvc:View
+  controllerName="approval.controller.InquiryList"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  displayBlock="true">
+
+  <Page title="問い合わせ一覧" showNavButton="false">
+    <headerContent>
+      <Button icon="sap-icon://refresh" tooltip="更新" press=".onRefresh" />
+    </headerContent>
+
+    <content>
+      <Table id="inquiryTable"
+        items="{
+          path: '/Inquiries',
+          parameters: { $expand: 'assignedMember', $orderby: 'createdAt desc' }
+        }"
+        mode="SingleSelectMaster"
+        selectionChange=".onSelectionChange"
+        growing="true" growingThreshold="20"
+        noDataText="問い合わせはありません">
+
+        <headerToolbar>
+          <OverflowToolbar>
+            <Title text="問い合わせ一覧" level="H3" />
+          </OverflowToolbar>
+        </headerToolbar>
+
+        <columns>
+          <Column><Text text="問い合わせID" /></Column>
+          <Column><Text text="件名" /></Column>
+          <Column minScreenWidth="Tablet" demandPopin="true"><Text text="種別" /></Column>
+          <Column minScreenWidth="Tablet" demandPopin="true"><Text text="優先度" /></Column>
+          <Column minScreenWidth="Desktop" demandPopin="true"><Text text="起票日時" /></Column>
+          <Column minScreenWidth="Tablet" demandPopin="true"><Text text="担当者" /></Column>
+          <Column><Text text="ステータス" /></Column>
+        </columns>
+
+        <items>
+          <ColumnListItem type="Navigation" press=".onItemPress">
+            <cells>
+              <Text text="{inquiryNo}" />
+              <Text text="{subject}" />
+              <Text text="{inquiryType}" />
+              <ObjectStatus text="{priority}" state="{= ${priority} === '高' ? 'Error' : ${priority} === '中' ? 'Warning' : 'None' }" />
+              <Text text="{path: 'createdAt', formatter: '.formatDate'}" />
+              <Text text="{= ${assignedMember/name} ? ${assignedMember/name} : '未アサイン' }" />
+              <ObjectStatus
+                text="{status}"
+                state="{= ${status} === '承認済み' ? 'Success' : ${status} === '承認待ち' ? 'Warning' : 'None' }" />
+            </cells>
+          </ColumnListItem>
+        </items>
+      </Table>
+    </content>
+  </Page>
+</mvc:View>
